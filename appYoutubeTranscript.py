@@ -14,7 +14,9 @@ link = st.text_input('🔗 Digite o link do vídeo...') # Campo de entrada para 
 if link:
 
     loader = YoutubeLoader.from_youtube_url(
-        link, add_video_info=False
+        link,
+        add_video_info=False,
+        language=["pt"]
     )
     result = loader.load()
 
