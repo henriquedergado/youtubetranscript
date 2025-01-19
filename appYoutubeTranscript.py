@@ -4,7 +4,7 @@ from langchain_community.document_loaders import YoutubeLoader
 
 # Adicionar a imagem no cabeçalho
 image_url = "https://www.seccoattuy.com.br/wp-content/uploads/2022/10/logo.png"
-st.image(image_url, use_container_width=True)
+st.image(image_url, width=300)
 
 # Adicionar o nome do aplicativo
 st.subheader("Youtube transcripts - Secco Attui")
