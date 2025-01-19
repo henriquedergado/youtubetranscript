@@ -1,4 +1,5 @@
 # Importando bibliotecas essenciais para o funcionamento do script
+import os
 import streamlit as st # Importando a biblioteca Streamlit para criação de aplicações web
 from langchain_community.document_loaders import YoutubeLoader
 
