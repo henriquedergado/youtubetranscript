@@ -19,5 +19,9 @@ if link:
         language=["pt"]
     )
     result = loader.load()
-
-    st.write(result) # Exibe a transcrição gerada
+    # Verifica se o primeiro item é um objeto do tipo Document
+    if hasattr(result[0], 'page_content'):
+        page_content = result[0].page_content  # Acessa o atributo diretamente
+        st.write(page_content)  # Exibe o conteúdo no Streamlit
+    else:
+        st.write("O atributo 'page_content' não está disponível no objeto.")
