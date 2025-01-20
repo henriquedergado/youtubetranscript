@@ -19,7 +19,7 @@ language_options = {
     "Espanhol": "es",
 }
 language = st.selectbox(
-    "🌐 Escolha o idioma da transcrição:",
+    "🌐 Escolha o idioma do vídeo:",
     options=list(language_options.keys()),
     index=0  # Padrão: Português
 )
