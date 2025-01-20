@@ -23,6 +23,7 @@ st.image(image_url, width=300)
 st.subheader("Youtube transcripts - Wordpress Blog generator")
 link = st.text_input('🔗 Digite o link do Youtube para transcrição...') # Campo de entrada para o usuário escrever o tema
 link_ref_artigo = st.text_input('🔗 Digite o link de um post para referência de tom de voz...')
+run_button = st.button("Run!")
 
 # Definindo templates de prompt para o título do vídeo e o roteiro
 blog_template = PromptTemplate(
@@ -40,7 +41,7 @@ blog_template = PromptTemplate(
 )
 
 # Mostrando os resultados na tela se houver um prompt
-if link and link_ref_artigo:
+if run_button and link and link_ref_artigo:
 
     loader = YoutubeLoader.from_youtube_url(
         link,
