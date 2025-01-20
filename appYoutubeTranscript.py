@@ -24,15 +24,18 @@ st.image(image_url, width=300)
 st.subheader("Youtube transcripts - Wordpress Blog generator")
 link = st.text_input('🔗 Digite o link do Youtube para transcrição...') # Campo de entrada para o usuário escrever o tema
 link_ref_artigo = st.text_input('🔗 Digite o link de um post para referência de tom de voz...')
+prompt = st.text_area("Caso queira, direcione o agente com suas preferências", height=160)
 run_button = st.button("Run!")
 
 # Definindo templates de prompt para o título do vídeo e o roteiro
 blog_template = PromptTemplate(
-    input_variables = ['transcription', 'article'], 
+    input_variables = ['transcription', 'article', 'prompt'], 
     template = """
     Atue como redador especializado em Copywriting, Escreva um post para um blog Wordpress resumindo a transcrição... {transcription}
     
     Utilize como referência de tom de voz o artigo... {article}
+
+    Considere as observações do gerente de conteúdo na hora de gerar o conteúdo... {prompt}
     <regras>
      - O texto deve ter pelo menos 3000 caracteres
      - Não invente dados, utilize a transcrição como fonte de conhecimento
@@ -63,9 +66,10 @@ if run_button and link and link_ref_artigo:
         llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.8)
         # Configurando a cadeia de LLM para gerar títulos
         blog_chain = LLMChain(llm=llm, prompt=blog_template, verbose=True, output_key='post')
+        st.write('Acessando referência para entender o tom de voz...')
         article = requests.get('https://r.jina.ai/'+link_ref_artigo, headers=headers)
-        post = blog_chain.run(transcription=page_content, article=article.text)
-
+        st.write('Preparando o conteúdo...')
+        post = blog_chain.run(transcription=page_content, article=article.text, prompt=prompt)
         with st.expander('post para Blog'): 
             st.info(post)
     else:
