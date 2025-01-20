@@ -7,6 +7,7 @@ from langchain.llms import OpenAI # Importando o modelo de linguagem da OpenAI
 from langchain.prompts import PromptTemplate # Importando a classe para templates de prompt
 from langchain.chains import LLMChain, SequentialChain # Importando classes para criar cadeias de LLM
 from langchain_openai import ChatOpenAI
+import requests # Importando a biblioteca para realizar requisições HTTP
 
 # Configurando a chave de API da OpenAI no ambiente
 os.environ['OPENAI_API_KEY'] = st.secrets["openai_api_key"]
