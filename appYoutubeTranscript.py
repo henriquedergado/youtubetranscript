@@ -43,7 +43,7 @@ if run_button and link:
     # Verifica se o primeiro item é um objeto do tipo Document
     if result and hasattr(result[0], 'page_content'):
         page_content = result[0].page_content  # Acessa o atributo diretamente
-         with st.expander('Transcrição'):
+        with st.expander('Transcrição'):
             st.info(page_content)
         
     else:
