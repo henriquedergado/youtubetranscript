@@ -27,6 +27,7 @@ link_ref_artigo = st.text_input('🔗 Digite o link de um post para referência 
 prompt = st.text_area("Caso queira, direcione o agente com suas preferências", height=160)
 run_button = st.button("Run!")
 
+
 # Definindo templates de prompt para o título do vídeo e o roteiro
 blog_template = PromptTemplate(
     input_variables = ['transcription', 'article', 'prompt'], 
@@ -44,13 +45,19 @@ blog_template = PromptTemplate(
     """
 )
 
+# Inicializa o estado do botão para clique automático
+if "retry" not in st.session_state:
+    st.session_state.retry = False
+
 # Usando Session State para limpar resultados
 if "generated" not in st.session_state:
     st.session_state.generated = None
+    
 
 # Quando o botão é clicado
-if run_button:
+if run_button or st.session_state.retry:
     # Limpa os resultados anteriores
+    st.session_state.retry = False
     st.session_state.generated = None
 
     if link and link_ref_artigo:
@@ -83,12 +90,13 @@ if run_button:
                 "post": post
             }
         else:
-            st.write("Não consegui acessar o link, tente novamente...")
+            st.write("Não consegui acessar o link, vou tentar novamente...")
+            st.session_state.retry = True
     else:
         st.write("Preencha os links corretamente...")
 
         # Exibe os resultados se estiverem no estado
-    if st.session_state.generated:
+    if "generated" in st.session_state and st.session_state.generated:
         with st.expander('Transcrição'):
             st.info(st.session_state.generated["page_content"])
 
