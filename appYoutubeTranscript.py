@@ -54,23 +54,27 @@ if run_button and link and link_ref_artigo:
     )
     result = loader.load()
     # Verifica se o primeiro item é um objeto do tipo Document
-    if hasattr(result[0], 'page_content'):
-        page_content = result[0].page_content  # Acessa o atributo diretamente
+    if result[0]: 
+        if hasattr(result[0], 'page_content'):
+            page_content = result[0].page_content  # Acessa o atributo diretamente
 
-        st.write('Aqui está a transcrição do vídeo')
-        with st.expander('Transcrição'): 
-            st.info(page_content)
+            st.write('Aqui está a transcrição do vídeo')
+            with st.expander('Transcrição'): 
+                st.info(page_content)
 
-        st.write('Agora estamos gerando o texto do Blog, aguarde...')
+            st.write('Agora estamos gerando o texto do Blog, aguarde...')
 
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.8)
-        # Configurando a cadeia de LLM para gerar títulos
-        blog_chain = LLMChain(llm=llm, prompt=blog_template, verbose=True, output_key='post')
-        st.write('Acessando referência para entender o tom de voz...')
-        article = requests.get('https://r.jina.ai/'+link_ref_artigo, headers=headers)
-        st.write('Preparando o conteúdo...')
-        post = blog_chain.run(transcription=page_content, article=article.text, prompt=prompt)
-        with st.expander('post para Blog'): 
-            st.info(post)
+            llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.8)
+            # Configurando a cadeia de LLM para gerar títulos
+            blog_chain = LLMChain(llm=llm, prompt=blog_template, verbose=True, output_key='post')
+            st.write('Acessando referência para entender o tom de voz...')
+            article = requests.get('https://r.jina.ai/'+link_ref_artigo, headers=headers)
+            st.write('Preparando o conteúdo...')
+            post = blog_chain.run(transcription=page_content, article=article.text, prompt=prompt)
+
+            with st.expander('post para Blog'): 
+                st.info(post)
+        else:
+            st.write("O atributo 'page_content' não está disponível no objeto.")
     else:
-        st.write("O atributo 'page_content' não está disponível no objeto.")
+        st.write("Não consegui acessar o link, tente novamente...")
