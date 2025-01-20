@@ -44,23 +44,28 @@ blog_template = PromptTemplate(
     """
 )
 
-# Mostrando os resultados na tela se houver um prompt
-if run_button and link and link_ref_artigo:
+# Usando Session State para limpar resultados
+if "generated" not in st.session_state:
+    st.session_state.generated = None
 
-    loader = YoutubeLoader.from_youtube_url(
-        link,
-        add_video_info=False,
-        language=["pt"]
-    )
-    result = loader.load()
-    # Verifica se o primeiro item é um objeto do tipo Document
-    if result[0]: 
-        if hasattr(result[0], 'page_content'):
+# Quando o botão é clicado
+if run_button:
+    # Limpa os resultados anteriores
+    st.session_state.generated = None
+
+    if link and link_ref_artigo:
+
+        st.write('Gerando a transcrição do vídeo')
+        loader = YoutubeLoader.from_youtube_url(
+            link,
+            add_video_info=False,
+            language=["pt"]
+        )
+        result = loader.load()
+        
+        # Verifica se o primeiro item é um objeto do tipo Document
+        if result and hasattr(result[0], 'page_content'):
             page_content = result[0].page_content  # Acessa o atributo diretamente
-
-            st.write('Aqui está a transcrição do vídeo')
-            with st.expander('Transcrição'): 
-                st.info(page_content)
 
             st.write('Agora estamos gerando o texto do Blog, aguarde...')
 
@@ -72,9 +77,20 @@ if run_button and link and link_ref_artigo:
             st.write('Preparando o conteúdo...')
             post = blog_chain.run(transcription=page_content, article=article.text, prompt=prompt)
 
-            with st.expander('post para Blog'): 
-                st.info(post)
+            # Salva os resultados gerados no estado
+            st.session_state.generated = {
+                "page_content": page_content,
+                "post": post
+            }
         else:
-            st.write("O atributo 'page_content' não está disponível no objeto.")
+            st.write("Não consegui acessar o link, tente novamente...")
     else:
-        st.write("Não consegui acessar o link, tente novamente...")
+        st.write("Preencha os links corretamente...")
+
+        # Exibe os resultados se estiverem no estado
+    if st.session_state.generated:
+        with st.expander('Transcrição'):
+            st.info(st.session_state.generated["page_content"])
+
+        with st.expander('Post para Blog'):
+            st.info(st.session_state.generated["post"])
