@@ -69,6 +69,9 @@ if run_button or st.session_state.retry:
             language=["pt"]
         )
         result = loader.load()
+
+        while not result:
+            result = loader.load()
         
         # Verifica se o primeiro item é um objeto do tipo Document
         if result and hasattr(result[0], 'page_content'):
