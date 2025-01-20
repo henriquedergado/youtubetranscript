@@ -40,7 +40,7 @@ blog_template = PromptTemplate(
 )
 
 # Mostrando os resultados na tela se houver um prompt
-if link AND link_ref_artigo:
+if link and link_ref_artigo:
 
     loader = YoutubeLoader.from_youtube_url(
         link,
