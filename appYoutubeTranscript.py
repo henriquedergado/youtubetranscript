@@ -11,15 +11,29 @@ st.image(image_url, width=300)
 # Adicionar o nome do aplicativo
 st.subheader("Youtube transcript")
 link = st.text_input('🔗 Digite o link do Youtube para transcrição...') # Campo de entrada para o usuário escrever o tema
+
+# Campo de seleção de idioma
+language_options = {
+    "Português": "pt",
+    "Inglês": "en",
+    "Espanhol": "es",
+}
+language = st.selectbox(
+    "🌐 Escolha o idioma da transcrição:",
+    options=list(language_options.keys()),
+    index=0  # Padrão: Português
+)
+
 run_button = st.button("Run!")
 
 # Quando o botão é clicado
 if run_button and link:
     st.write('Gerando a transcrição do vídeo')
+    selected_language = language_options[language]
     loader = YoutubeLoader.from_youtube_url(
         link,
         add_video_info=False,
-        language=["pt"]
+        language=[selected_language]
     )
     result = loader.load()
 
